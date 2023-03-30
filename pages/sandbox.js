@@ -1,7 +1,8 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
+// MUI imports
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -13,12 +14,15 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
-
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
+//API Imports
 import { Categrories } from "../api/fakeCategoriesService";
 import { Products } from "../api/fakeProductService";
+
+//Custom Components imports
+import DialogProductDetails from "../components/dialog-product-details";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -59,6 +63,9 @@ function Sandbox() {
   const [categories, setCategories] = useState(null);
   const [products, setProducts] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const dialogProductDetailsRef = useRef();
 
   useEffect(() => {
     setCategories(Categrories);
@@ -116,7 +123,8 @@ function Sandbox() {
   };
 
   const showProductDetails = (product) => {
-    console.log("details of ", product.name);
+    //setSelectedProduct(product);
+    dialogProductDetailsRef.current.handleClickOpen(product);
   };
 
   return (
@@ -169,6 +177,11 @@ function Sandbox() {
           ))}
         </Box>
       )}
+
+      <DialogProductDetails
+        ref={dialogProductDetailsRef}
+        selectedProduct={selectedProduct}
+      />
     </>
   );
 }

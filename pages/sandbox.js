@@ -23,6 +23,7 @@ import { Products } from "../api/fakeProductService";
 
 //Custom Components imports
 import DialogProductDetails from "../components/dialog-product-details";
+import DialogProductDetails2 from "../components/dialog-product-details-2";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,6 +65,11 @@ function Sandbox() {
   const [products, setProducts] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProductQuantity, setSelectedProductQuantity] = useState(0);
+  const [productDetailsDialogVisibility, setProductDetailsDialogVisibility] =
+    useState(false);
+
+  const [orders, setOrders] = useState([]);
 
   const dialogProductDetailsRef = useRef();
 
@@ -123,8 +129,33 @@ function Sandbox() {
   };
 
   const showProductDetails = (product) => {
-    //setSelectedProduct(product);
-    dialogProductDetailsRef.current.handleClickOpen(product);
+    setSelectedProduct(product);
+    const isProductExisting = orders.find(
+      (order) => order.product.id == product.id
+    );
+    setSelectedProductQuantity(
+      isProductExisting ? isProductExisting.quantity : 0
+    );
+    setProductDetailsDialogVisibility(true);
+  };
+
+  const addToOrders = (product, quantity) => {
+    const tempOrders = orders;
+    const isProductExisting = orders.find(
+      (order) => order.product.id == product.id
+    );
+
+    if (isProductExisting) {
+      const index = orders.indexOf(isProductExisting);
+      tempOrders[index].quantity = quantity;
+    } else {
+      tempOrders.push({ product: product, quantity: quantity });
+    }
+    setOrders(tempOrders);
+    setProductDetailsDialogVisibility(false);
+    {
+      console.log("ORDERS: ", orders);
+    }
   };
 
   return (
@@ -176,6 +207,15 @@ function Sandbox() {
             </TabPanel>
           ))}
         </Box>
+      )}
+
+      {productDetailsDialogVisibility && (
+        <DialogProductDetails2
+          selectedProduct={selectedProduct}
+          selectedProductQuantity={selectedProductQuantity}
+          setProductDetailsDialogVisibility={setProductDetailsDialogVisibility}
+          addToOrders={addToOrders}
+        />
       )}
 
       <DialogProductDetails

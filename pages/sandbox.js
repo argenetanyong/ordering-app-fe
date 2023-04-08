@@ -76,6 +76,7 @@ function Sandbox() {
   useEffect(() => {
     setCategories(Categrories);
     setProducts(Products);
+    console.log("onload orders length", orders.length);
   }, []);
 
   const handleChange = (event, newValue) => {
@@ -140,22 +141,31 @@ function Sandbox() {
   };
 
   const addToOrders = (product, quantity) => {
-    const tempOrders = orders;
-    const isProductExisting = orders.find(
+    const copyOfOrdersArray = orders;
+    const isProductExisting = copyOfOrdersArray.find(
       (order) => order.product.id == product.id
     );
 
     if (isProductExisting) {
-      const index = orders.indexOf(isProductExisting);
-      tempOrders[index].quantity = quantity;
+      const index = copyOfOrdersArray.indexOf(isProductExisting);
+      copyOfOrdersArray[index].quantity = quantity;
     } else {
-      tempOrders.push({ product: product, quantity: quantity });
+      copyOfOrdersArray.push({ product: product, quantity: quantity });
     }
-    setOrders(tempOrders);
+    setOrders(copyOfOrdersArray);
     setProductDetailsDialogVisibility(false);
-    {
-      console.log("ORDERS: ", orders);
-    }
+  };
+
+  const removeOrder = (product) => {
+    const copyOfOrdersArray = orders;
+    const isProductExisting = copyOfOrdersArray.find(
+      (order) => order.product.id == product.id
+    );
+
+    const index = copyOfOrdersArray.indexOf(isProductExisting);
+    copyOfOrdersArray.splice(index, 1);
+    setOrders(copyOfOrdersArray);
+    setProductDetailsDialogVisibility(false);
   };
 
   return (
@@ -215,6 +225,7 @@ function Sandbox() {
           selectedProductQuantity={selectedProductQuantity}
           setProductDetailsDialogVisibility={setProductDetailsDialogVisibility}
           addToOrders={addToOrders}
+          removeOrder={removeOrder}
         />
       )}
 

@@ -161,10 +161,11 @@ function Sandbox() {
     const isProductExisting = copyOfOrdersArray.find(
       (order) => order.product.id == product.id
     );
-
-    const index = copyOfOrdersArray.indexOf(isProductExisting);
-    copyOfOrdersArray.splice(index, 1);
-    setOrders(copyOfOrdersArray);
+    if (isProductExisting) {
+      const index = copyOfOrdersArray.indexOf(isProductExisting);
+      copyOfOrdersArray.splice(index, 1);
+      setOrders(copyOfOrdersArray);
+    }
     setProductDetailsDialogVisibility(false);
   };
 

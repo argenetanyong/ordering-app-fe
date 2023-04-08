@@ -14,6 +14,7 @@ const DialogProductDetails = ({
   selectedProductQuantity,
   setProductDetailsDialogVisibility,
   addToOrders,
+  removeOrder,
 }) => {
   const [open, setOpen] = useState(true);
   const [quantity, setQuantity] = useState(selectedProductQuantity);
@@ -34,7 +35,7 @@ const DialogProductDetails = ({
   const submit = () => {
     quantity > 0
       ? addToOrders(selectedProduct, quantity)
-      : console.log("NO ORDERS");
+      : removeOrder(selectedProduct);
   };
 
   return (
@@ -75,7 +76,7 @@ const DialogProductDetails = ({
             </Box>
             <Box sx={{ display: "flex" }}>
               <Button onClick={handleClose}>CANCEL</Button>
-              <Button onClick={submit}>ADD</Button>
+              <Button onClick={submit}>SUBMIT</Button>
             </Box>
           </Box>
         </DialogActions>

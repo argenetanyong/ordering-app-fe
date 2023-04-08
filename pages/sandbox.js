@@ -168,6 +168,13 @@ function Sandbox() {
     setProductDetailsDialogVisibility(false);
   };
 
+  const getTotalPrice = () => {
+    const totalPrice = orders.reduce((accumulator, current) => {
+      return accumulator + current.product.price * current.quantity;
+    }, 0);
+    return totalPrice;
+  };
+
   return (
     <>
       {categories && products && (
@@ -216,6 +223,24 @@ function Sandbox() {
               </Grid>
             </TabPanel>
           ))}
+          <div style={{ width: 300, backgroundColor: "#add8e6" }}>
+            <div> Orders:</div>
+            {orders.map((order, index) => (
+              <div
+                style={{ width: 300, backgroundColor: "#87CEFA" }}
+                key={index}
+              >
+                <div>
+                  {order.quantity} {"  X"} {order.product.name}
+                  {"--- Php"} {order.product.price * order.quantity}
+                </div>
+              </div>
+            ))}
+            <div> Total amount:</div>
+            <div style={{ backgroundColor: "DodgerBlue" }}>
+              {"  Php"} {getTotalPrice()}{" "}
+            </div>
+          </div>
         </Box>
       )}
 

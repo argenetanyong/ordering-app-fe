@@ -59,7 +59,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-function Sandbox() {
+function Dashboard() {
   const [value, setValue] = useState(0);
   const [categories, setCategories] = useState(null);
   const [products, setProducts] = useState(null);
@@ -263,4 +263,4 @@ function Sandbox() {
   );
 }
 
-export default Sandbox;
+export default Dashboard;

@@ -24,6 +24,7 @@ import { Products } from "../api/fakeProductService";
 //Custom Components imports
 import DialogProductDetails from "../components/dialog-product-details";
 import DialogProductDetails2 from "../components/dialog-product-details-2";
+import OrdersPanel from "../components/orders-panel";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -130,6 +131,7 @@ function Dashboard() {
   };
 
   const showProductDetails = (product) => {
+    console.log("product-> ", product);
     setSelectedProduct(product);
     const isProductExisting = orders.find(
       (order) => order.product.id == product.id
@@ -169,7 +171,7 @@ function Dashboard() {
     setProductDetailsDialogVisibility(false);
   };
 
-  const getTotalPrice = () => {
+  const showTotalPrice = () => {
     const totalPrice = orders.reduce((accumulator, current) => {
       return accumulator + current.product.price * current.quantity;
     }, 0);
@@ -224,24 +226,11 @@ function Dashboard() {
               </Grid>
             </TabPanel>
           ))}
-          <div style={{ width: 300, backgroundColor: "#add8e6" }}>
-            <div> Orders:</div>
-            {orders.map((order, index) => (
-              <div
-                style={{ width: 300, backgroundColor: "#87CEFA" }}
-                key={index}
-              >
-                <div>
-                  {order.quantity} {"  X"} {order.product.name}
-                  {"--- Php"} {order.product.price * order.quantity}
-                </div>
-              </div>
-            ))}
-            <div> Total amount:</div>
-            <div style={{ backgroundColor: "DodgerBlue" }}>
-              {"  Php"} {getTotalPrice()}{" "}
-            </div>
-          </div>
+          <OrdersPanel
+            orders={orders}
+            showTotalPrice={showTotalPrice}
+            showProductDetails={showProductDetails}
+          />
         </Box>
       )}
 

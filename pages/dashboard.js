@@ -26,6 +26,10 @@ import DialogProductDetails from "../components/dialog-product-details";
 import DialogProductDetails2 from "../components/dialog-product-details-2";
 import OrdersPanel from "../components/orders-panel";
 
+//API imports
+import productsApi from "./api/products";
+import categoriesApi from "./api/categories";
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -75,10 +79,32 @@ function Dashboard() {
   const dialogProductDetailsRef = useRef();
 
   useEffect(() => {
-    setCategories(Categrories);
-    setProducts(Products);
-    console.log("onload orders length", orders.length);
+    async function initialize() {
+      await getProducts();
+      await getCategories();
+    }
+    initialize();
   }, []);
+
+  const getProducts = async () => {
+    try {
+      const result = await productsApi.list();
+      console.log("PRODUCTS API LIST RESULT-> ", result);
+      setProducts(result);
+    } catch (error) {
+      console.log("Error while fetching products data ", error);
+    }
+  };
+
+  const getCategories = async () => {
+    try {
+      const result = await categoriesApi.list();
+      console.log("CATEGORIES API LIST RESULT-> ", result);
+      setCategories(result);
+    } catch (error) {
+      console.log("Error while fetching categories data ", error);
+    }
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -8,75 +8,118 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
-import Typography from "@mui/material/Typography";
+//API imports
+import categoriesApi from "../../../pages/api/categories";
 
-const ModalForm = forwardRef(
-  (
-    {
-      setPaymentSuccess,
-      setSpinButtonVisibility,
-      handlePaymentStatusVisibility,
-      entryAmount,
-      competitionTitle,
+const ModalForm = forwardRef(({ getCategories }, ref) => {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
+
+  useImperativeHandle(ref, () => ({
+    handleClickOpen(id) {
+      handleClickOpen(id);
     },
-    ref
-  ) => {
-    const [open, setOpen] = useState(false);
-    const [choosePaymentMode, setChoosePaymentMode] = useState(true);
+  }));
 
-    useImperativeHandle(ref, () => ({
-      handleClickOpen() {
-        handleClickOpen();
-      },
-    }));
+  const handleClickOpen = (id) => {
+    setName("");
+    setOpen(true);
+    setId(id);
+    if (id) {
+      findDataById(id);
+    }
+  };
 
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
+  const findDataById = async (id) => {
+    const res = await categoriesApi.findById(id);
+    if (res) {
+      setName(res.name);
+    }
+  };
 
-    const handleClose = (event, reason) => {
-      if (reason == "backdropClick") {
-        console.log("BG CLICK");
-      }
-      setOpen(false);
-    };
+  const handleClose = (event, reason) => {
+    if (reason == "backdropClick") {
+      console.log("BG CLICK");
+    }
+    setOpen(false);
+  };
 
-    const handleSubmit = () => {
-      console.log("SUBMIT");
-    };
+  const createData = async (data) => {
+    await categoriesApi.create(data);
+    getCategories();
+  };
 
-    return (
-      <>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          sx={{ maxWidth: "500px", margin: "0 auto" }}
-        >
-          <DialogTitle>ADD A CATEGORY</DialogTitle>
-          <DialogContent>
-            <TextField label="name" sx={{ mt: "10px", mb: "10px" }}></TextField>
-          </DialogContent>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              margin: "20px",
-            }}
-          >
-            <Button variant="contained" onClick={() => handleClose()}>
-              CANCEL
-            </Button>
-            <Button variant="contained" onClick={() => handleSubmit()}>
-              SUBMIT
-            </Button>
-          </Box>
-        </Dialog>
-      </>
-    );
-  }
-);
+  const updateData = async (id, data) => {
+    await categoriesApi.update(id, data);
+    getCategories();
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = { name: name };
+    if (id) {
+      updateData(id, data);
+    } else {
+      createData(data);
+    }
+
+    setOpen(false);
+  };
+
+  const handleChange = (event) => {
+    const inputValue = event.target.value;
+    // pattern to match letters only
+    const pattern = /^[a-zA-Z]*$/;
+    if (pattern.test(inputValue)) {
+      setName(inputValue);
+    }
+  };
+
+  return (
+    <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        sx={{ maxWidth: "500px", margin: "0 auto" }}
+      >
+        <DialogTitle>{id ? "EDIT CATEGORY" : "ADD CATEGORY"}</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              sx={{ mt: "10px", mb: "10px" }}
+              type="text"
+              variant="outlined"
+              color="secondary"
+              label=" Name"
+              onChange={handleChange}
+              value={name}
+              fullWidth
+              required
+            />
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                margin: "20px",
+              }}
+            >
+              <Button variant="contained" onClick={() => handleClose()}>
+                CANCEL
+              </Button>
+              <Button variant="contained" type="submit">
+                SUBMIT
+              </Button>
+            </Box>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+});
 
 ModalForm.displayName = "ModalForm";
 

@@ -42,15 +42,16 @@ export default function CategoriesPage() {
   };
 
   const handleCreate = () => {
-    modalFormRef.current.handleClickOpen();
+    modalFormRef.current.handleClickOpen(null);
   };
 
-  const handleUpdate = () => {
-    console.log("update");
+  const handleUpdate = (id) => {
+    modalFormRef.current.handleClickOpen(id);
   };
 
-  const handleDelete = () => {
-    console.log("delete");
+  const handleDelete = async (id) => {
+    await categoriesApi.remove(id);
+    getCategories();
   };
 
   return (
@@ -83,7 +84,7 @@ export default function CategoriesPage() {
                 <TableBody>
                   {categories.map((category) => (
                     <TableRow
-                      key={category.name}
+                      key={category.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="categorys">
@@ -92,11 +93,11 @@ export default function CategoriesPage() {
                       <TableCell align="right">
                         <ModeEditIcon
                           sx={{ cursor: "pointer" }}
-                          onClick={() => handleUpdate()}
+                          onClick={() => handleUpdate(category.id)}
                         />
                         <ClearIcon
                           sx={{ cursor: "pointer" }}
-                          onClick={() => handleDelete()}
+                          onClick={() => handleDelete(category.id)}
                         />
                       </TableCell>
                     </TableRow>
@@ -108,7 +109,7 @@ export default function CategoriesPage() {
         </Box>
       )}
 
-      <ModalForm ref={modalFormRef} />
+      <ModalForm ref={modalFormRef} getCategories={getCategories} />
     </>
   );
 }

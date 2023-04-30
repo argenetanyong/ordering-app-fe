@@ -10,12 +10,19 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import ClearIcon from "@mui/icons-material/Clear";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 //API imports
 import productsApi from "../api/products";
 import categoriesApi from "../api/categories";
 
+//Custom components imports
+import ModalForm from "../../components/products/modal/ModalForm";
+
 export default function BasicTable() {
+  const modalFormRef = useRef();
   const [products, setProducts] = useState(null);
   const [categories, setCategories] = useState(null);
 
@@ -50,11 +57,37 @@ export default function BasicTable() {
     return category[0].name;
   };
 
+  const handleCreate = () => {
+    modalFormRef.current.handleClickOpen(null);
+  };
+
+  const handleUpdate = (id) => {
+    modalFormRef.current.handleClickOpen(id);
+  };
+
+  const handleDelete = async (id) => {
+    await productsApi.remove(id);
+    getCategories();
+  };
+
   return (
     <>
       {products && categories && (
-        <div>
-          <div>ADD</div>
+        <Box sx={{ maxWidth: 800, margin: "0 auto", height: "100vh" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              margin: "20px 0",
+            }}
+          >
+            <Typography>Products</Typography>
+            <Button variant="contained" onClick={() => handleCreate()}>
+              Create
+            </Button>
+          </Box>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -79,16 +112,28 @@ export default function BasicTable() {
                       {displayCategoryName(product.category_id)}
                     </TableCell>
                     <TableCell align="right">
-                      <ModeEditIcon />
-                      <ClearIcon />
+                      <ModeEditIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleUpdate(product.id)}
+                      />
+                      <ClearIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleDelete(product.id)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-        </div>
+        </Box>
       )}
+
+      <ModalForm
+        ref={modalFormRef}
+        getCategories={getCategories}
+        categories={categories}
+      />
     </>
   );
 }

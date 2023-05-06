@@ -45,6 +45,21 @@ const loginWithJwt = (jwt) => {
   localStorage.setItem("token", jwt);
 };
 
+const login = async (data) => {
+  try {
+    const res = await mainAxios({
+      method: "post",
+      url: `authentications`,
+      data: data,
+    });
+    const jwt = res.data.result.token;
+    localStorage.setItem("token", jwt);
+    return res.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
+
 const update = async (id, data) => {
   try {
     const res = await mainAxios({
@@ -77,4 +92,5 @@ export default {
   update,
   remove,
   loginWithJwt,
+  login,
 };

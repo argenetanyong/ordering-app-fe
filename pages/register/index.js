@@ -20,12 +20,13 @@ const Register = () => {
     try {
       const data = { username: username, password: password };
       const response = await usersApi.create(data);
-
       if (response.status == 400) {
         setStatus(response.data);
+        return;
       }
+      usersApi.loginWithJwt(response.result.token);
     } catch (error) {
-      console.log("error --- ", error);
+      console.log("error --- ", response);
     }
   };
 

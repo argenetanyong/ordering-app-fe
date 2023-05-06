@@ -41,6 +41,10 @@ const create = async (data) => {
   }
 };
 
+const loginWithJwt = (jwt) => {
+  localStorage.setItem("token", jwt);
+};
+
 const update = async (id, data) => {
   try {
     const res = await mainAxios({
@@ -72,4 +76,5 @@ export default {
   findById,
   update,
   remove,
+  loginWithJwt,
 };

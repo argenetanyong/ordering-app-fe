@@ -51,7 +51,7 @@ export default function CategoriesPage() {
 
   const handleDelete = async (id) => {
     await categoriesApi.remove(id);
-    getCategories();
+    await getCategories();
   };
 
   return (

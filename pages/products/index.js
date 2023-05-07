@@ -67,7 +67,8 @@ export default function BasicTable() {
 
   const handleDelete = async (id) => {
     await productsApi.remove(id);
-    getCategories();
+    await getProducts();
+    await getCategories();
   };
 
   return (
@@ -132,6 +133,7 @@ export default function BasicTable() {
       <ModalForm
         ref={modalFormRef}
         getCategories={getCategories}
+        getProducts={getProducts}
         categories={categories}
       />
     </>

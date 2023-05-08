@@ -16,6 +16,10 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 
 //API Imports
 import { Categrories } from "../api/fakeCategoriesService";
@@ -29,6 +33,8 @@ import OrdersPanel from "../components/orders-panel";
 //API imports
 import productsApi from "./api/products";
 import categoriesApi from "./api/categories";
+
+const navItems = ["Home", "About", "Contact"];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -73,6 +79,7 @@ function Dashboard() {
   const [selectedProductQuantity, setSelectedProductQuantity] = useState(0);
   const [productDetailsDialogVisibility, setProductDetailsDialogVisibility] =
     useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const [orders, setOrders] = useState([]);
 
@@ -204,8 +211,40 @@ function Dashboard() {
     return totalPrice;
   };
 
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
+
   return (
     <>
+      <AppBar component="nav">
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+          >
+            MUI
+          </Typography>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            {navItems.map((item) => (
+              <Button key={item} sx={{ color: "#fff" }}>
+                {item}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+      </AppBar>
+
       {categories && products && (
         <Box
           sx={{
@@ -213,6 +252,7 @@ function Dashboard() {
             bgcolor: "background.paper",
             display: "flex",
             height: "100vh",
+            marginTop: "60px",
           }}
         >
           <Tabs

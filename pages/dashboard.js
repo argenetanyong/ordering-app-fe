@@ -251,7 +251,7 @@ function Dashboard() {
             flexGrow: 1,
             bgcolor: "background.paper",
             display: "flex",
-            height: "100vh",
+            height: "auto",
             marginTop: "60px",
           }}
         >

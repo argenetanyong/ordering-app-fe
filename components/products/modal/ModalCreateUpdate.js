@@ -15,7 +15,7 @@ import InputLabel from "@mui/material/InputLabel";
 //API imports
 import productsApi from "../../../pages/api/products";
 
-const ModalForm = forwardRef(
+const ModalCreateUpdate = forwardRef(
   ({ getProducts, getCategories, categories }, ref) => {
     const [open, setOpen] = useState(false);
     const [name, setName] = useState("");
@@ -179,6 +179,6 @@ const ModalForm = forwardRef(
   }
 );
 
-ModalForm.displayName = "ModalForm";
+ModalCreateUpdate.displayName = "ModalCreateUpdate";
 
-export default ModalForm;
+export default ModalCreateUpdate;

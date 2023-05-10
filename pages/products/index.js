@@ -19,10 +19,12 @@ import productsApi from "../api/products";
 import categoriesApi from "../api/categories";
 
 //Custom components imports
-import ModalForm from "../../components/products/modal/ModalForm";
+import ModalCreateUpdate from "../../components/products/modal/ModalCreateUpdate";
+import ModalDelete from "../../components/products/modal/ModalDelete";
 
 export default function BasicTable() {
-  const modalFormRef = useRef();
+  const modalCreateUpdateRef = useRef();
+  const modalDeleteRef = useRef();
   const [products, setProducts] = useState(null);
   const [categories, setCategories] = useState(null);
 
@@ -58,17 +60,21 @@ export default function BasicTable() {
   };
 
   const handleCreate = () => {
-    modalFormRef.current.handleClickOpen(null);
+    modalCreateUpdateRef.current.handleClickOpen(null);
   };
 
   const handleUpdate = (id) => {
-    modalFormRef.current.handleClickOpen(id);
+    modalCreateUpdateRef.current.handleClickOpen(id);
   };
 
   const handleDelete = async (id) => {
     await productsApi.remove(id);
     await getProducts();
     await getCategories();
+  };
+
+  const handleOpenModaleDelete = async (id) => {
+    modalDeleteRef.current.handleClickOpen(id);
   };
 
   return (
@@ -119,7 +125,7 @@ export default function BasicTable() {
                       />
                       <ClearIcon
                         sx={{ cursor: "pointer" }}
-                        onClick={() => handleDelete(product.id)}
+                        onClick={() => handleOpenModaleDelete(product.id)}
                       />
                     </TableCell>
                   </TableRow>
@@ -130,11 +136,19 @@ export default function BasicTable() {
         </Box>
       )}
 
-      <ModalForm
-        ref={modalFormRef}
+      <ModalCreateUpdate
+        ref={modalCreateUpdateRef}
         getCategories={getCategories}
         getProducts={getProducts}
         categories={categories}
+      />
+
+      <ModalDelete
+        ref={modalDeleteRef}
+        getCategories={getCategories}
+        getProducts={getProducts}
+        categories={categories}
+        handleDelete={handleDelete}
       />
     </>
   );

@@ -29,6 +29,19 @@ const list = async (params) => {
   }
 };
 
+const findByCategoryId = async (id) => {
+  try {
+    const res = await mainAxios({
+      method: "get",
+      url: `${moduleName}/read-by-category-id/${id}`,
+    });
+    return res.data;
+  } catch (err) {
+    console.log("err", err);
+    return err.response;
+  }
+};
+
 const create = async (data) => {
   try {
     const res = await mainAxios({
@@ -73,4 +86,5 @@ export default {
   findById,
   update,
   remove,
+  findByCategoryId,
 };

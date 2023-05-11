@@ -19,10 +19,12 @@ import Box from "@mui/material/Box";
 import categoriesApi from "../api/categories";
 
 //Custom components imports
-import ModalForm from "../../components/categories/modal/ModalForm";
+import ModalCreateUpdate from "../../components/categories/modal/ModalCreateUpdate";
+import ModalDelete from "../../components/categories/modal/ModalDelete";
 
 export default function CategoriesPage() {
-  const modalFormRef = useRef();
+  const modalCreateUpdateRef = useRef();
+  const modalDeleteRef = useRef();
   const [categories, setCategories] = useState(null);
 
   useEffect(() => {
@@ -42,16 +44,20 @@ export default function CategoriesPage() {
   };
 
   const handleCreate = () => {
-    modalFormRef.current.handleClickOpen(null);
+    modalCreateUpdateRef.current.handleClickOpen(null);
   };
 
   const handleUpdate = (id) => {
-    modalFormRef.current.handleClickOpen(id);
+    modalCreateUpdateRef.current.handleClickOpen(id);
   };
 
   const handleDelete = async (id) => {
     await categoriesApi.remove(id);
     await getCategories();
+  };
+
+  const handleOpenModaleDelete = async (id) => {
+    modalDeleteRef.current.handleClickOpen(id);
   };
 
   return (
@@ -97,7 +103,8 @@ export default function CategoriesPage() {
                         />
                         <ClearIcon
                           sx={{ cursor: "pointer" }}
-                          onClick={() => handleDelete(category.id)}
+                          /*  onClick={() => handleDelete(category.id)} */
+                          onClick={() => handleOpenModaleDelete(category.id)}
                         />
                       </TableCell>
                     </TableRow>
@@ -109,7 +116,12 @@ export default function CategoriesPage() {
         </Box>
       )}
 
-      <ModalForm ref={modalFormRef} getCategories={getCategories} />
+      <ModalCreateUpdate
+        ref={modalCreateUpdateRef}
+        getCategories={getCategories}
+      />
+
+      <ModalDelete ref={modalDeleteRef} handleDelete={handleDelete} />
     </>
   );
 }

@@ -22,17 +22,22 @@ import categoriesApi from "../../pages/api/categories";
 //Custom components imports
 import ModalCreateUpdate from "./modal/ModalCreateUpdate";
 import ModalDelete from "./modal/ModalDelete";
+import CustomPagination from "../customPagination";
+import { paginate } from "../../helpers/paginate";
 
 export default function ProductsList() {
   const modalCreateUpdateRef = useRef();
   const modalDeleteRef = useRef();
   const [products, setProducts] = useState(null);
   const [categories, setCategories] = useState(null);
+  const [paginatedProducts, setPaginatedProducts] = useState([]);
+  const pageSize = 6;
 
   useEffect(() => {
     async function initialize() {
       await getProducts();
       await getCategories();
+      paginateData(products, 1, pageSize);
     }
     initialize();
   }, []);
@@ -78,6 +83,15 @@ export default function ProductsList() {
     modalDeleteRef.current.handleClickOpen(id);
   };
 
+  const handlePageChange = (event, page) => {
+    paginateData(products, page, pageSize);
+  };
+
+  const paginateData = (list, page, pageSize) => {
+    const data = paginate(list, page, pageSize);
+    setPaginatedProducts(data);
+  };
+
   return (
     <>
       {products && categories && (
@@ -107,7 +121,7 @@ export default function ProductsList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {products.map((product) => (
+                {paginatedProducts.map((product) => (
                   <TableRow
                     key={product.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -135,17 +149,11 @@ export default function ProductsList() {
             </Table>
           </TableContainer>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              margin: "20px 0",
-            }}
-          >
-            {/* <Pagination count={10} color="primary" /> */}
-          </Box>
+          <CustomPagination
+            itemsCount={products.length}
+            pageSize={pageSize}
+            handlePageChange={handlePageChange}
+          />
         </Box>
       )}
 

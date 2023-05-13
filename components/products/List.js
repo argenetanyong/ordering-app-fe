@@ -37,10 +37,13 @@ export default function ProductsList() {
     async function initialize() {
       await getProducts();
       await getCategories();
-      paginateData(products, 1, pageSize);
     }
     initialize();
   }, []);
+
+  useEffect(() => {
+    paginateData(products, 1, pageSize);
+  }, [products]);
 
   const getProducts = async () => {
     try {
@@ -110,14 +113,45 @@ export default function ProductsList() {
               Create
             </Button>
           </Box>
+
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table
+              sx={{ minWidth: 650, minHeight: 450 }}
+              aria-label="simple table"
+            >
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell align="right">Price</TableCell>
-                  <TableCell align="right">Category</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 900,
+                    }}
+                  >
+                    Name
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{
+                      fontWeight: 900,
+                    }}
+                  >
+                    Price
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{
+                      fontWeight: 900,
+                    }}
+                  >
+                    Category
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    sx={{
+                      fontWeight: 900,
+                    }}
+                  >
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

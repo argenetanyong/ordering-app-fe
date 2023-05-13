@@ -22,10 +22,15 @@ import categoriesApi from "../../pages/api/categories";
 import ModalCreateUpdate from "./modal/ModalCreateUpdate";
 import ModalDelete from "./modal/ModalDelete";
 
+import CustomPagination from "../customPagination";
+import { paginate } from "../../helpers/paginate";
+
 export default function CategoriesPage() {
   const modalCreateUpdateRef = useRef();
   const modalDeleteRef = useRef();
   const [categories, setCategories] = useState(null);
+  const [paginatedCategories, setPaginatedCategories] = useState([]);
+  const pageSize = 6;
 
   useEffect(() => {
     async function initialize() {
@@ -33,6 +38,10 @@ export default function CategoriesPage() {
     }
     initialize();
   }, []);
+
+  useEffect(() => {
+    paginateData(categories, 1, pageSize);
+  }, [categories]);
 
   const getCategories = async () => {
     try {
@@ -60,6 +69,15 @@ export default function CategoriesPage() {
     modalDeleteRef.current.handleClickOpen(id);
   };
 
+  const handlePageChange = (event, page) => {
+    paginateData(categories, page, pageSize);
+  };
+
+  const paginateData = (list, page, pageSize) => {
+    const data = paginate(list, page, pageSize);
+    setPaginatedCategories(data);
+  };
+
   return (
     <>
       {categories && (
@@ -80,15 +98,31 @@ export default function CategoriesPage() {
           </Box>
           <Box>
             <TableContainer component={Paper}>
-              <Table aria-label="simple table">
+              <Table
+                aria-label="simple table"
+                sx={{ minWidth: 500, minHeight: 450 }}
+              >
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    <TableCell
+                      sx={{
+                        fontWeight: 900,
+                      }}
+                    >
+                      Name
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      sx={{
+                        fontWeight: 900,
+                      }}
+                    >
+                      Actions
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {categories.map((category) => (
+                  {paginatedCategories.map((category) => (
                     <TableRow
                       key={category.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -113,6 +147,11 @@ export default function CategoriesPage() {
               </Table>
             </TableContainer>
           </Box>
+          <CustomPagination
+            itemsCount={categories.length}
+            pageSize={pageSize}
+            handlePageChange={handlePageChange}
+          />
         </Box>
       )}
 

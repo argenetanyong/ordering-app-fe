@@ -110,7 +110,7 @@ const ModalCreateUpdate = forwardRef(
           onClose={handleClose}
           sx={{ maxWidth: "500px", margin: "0 auto" }}
         >
-          <DialogTitle>{id ? "EDIT CATEGORY" : "ADD CATEGORY"}</DialogTitle>
+          <DialogTitle>{id ? "EDIT PRODUCT" : "ADD PRODUCT"}</DialogTitle>
           <DialogContent>
             <form onSubmit={handleSubmit}>
               <TextField

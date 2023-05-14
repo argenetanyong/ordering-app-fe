@@ -96,7 +96,7 @@ function Dashboard() {
   const getProducts = async () => {
     try {
       const result = await productsApi.list();
-      console.log("PRODUCTS API LIST RESULT-> ", result);
+      //console.log("PRODUCTS API LIST RESULT-> ", result);
       setProducts(result);
     } catch (error) {
       console.log("Error while fetching products data ", error);
@@ -106,7 +106,7 @@ function Dashboard() {
   const getCategories = async () => {
     try {
       const result = await categoriesApi.list();
-      console.log("CATEGORIES API LIST RESULT-> ", result);
+      //console.log("CATEGORIES API LIST RESULT-> ", result);
       setCategories(result);
     } catch (error) {
       console.log("Error while fetching categories data ", error);

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 // MUI imports
 import { styled } from "@mui/material/styles";
@@ -71,6 +72,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function Dashboard() {
+  const router = useRouter();
   const [value, setValue] = useState(0);
   const [categories, setCategories] = useState(null);
   const [products, setProducts] = useState(null);
@@ -96,7 +98,7 @@ function Dashboard() {
   const getProducts = async () => {
     try {
       const result = await productsApi.list();
-      console.log("PRODUCTS API LIST RESULT-> ", result);
+      //console.log("PRODUCTS API LIST RESULT-> ", result);
       setProducts(result);
     } catch (error) {
       console.log("Error while fetching products data ", error);
@@ -106,7 +108,7 @@ function Dashboard() {
   const getCategories = async () => {
     try {
       const result = await categoriesApi.list();
-      console.log("CATEGORIES API LIST RESULT-> ", result);
+      //console.log("CATEGORIES API LIST RESULT-> ", result);
       setCategories(result);
     } catch (error) {
       console.log("Error while fetching categories data ", error);
@@ -164,7 +166,6 @@ function Dashboard() {
   };
 
   const showProductDetails = (product) => {
-    console.log("product-> ", product);
     setSelectedProduct(product);
     const isProductExisting = orders.find(
       (order) => order.product.id == product.id
@@ -215,6 +216,10 @@ function Dashboard() {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const handleAdminAccess = () => {
+    router.replace("/login");
+  };
+
   return (
     <>
       <AppBar component="nav">
@@ -233,14 +238,17 @@ function Dashboard() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            MUI
+            ORDERING QUEUING SYSTEM
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
+            {/*  {navItems.map((item) => (
               <Button key={item} sx={{ color: "#fff" }}>
                 {item}
               </Button>
-            ))}
+            ))} */}
+            <Button sx={{ color: "#fff" }} onClick={handleAdminAccess}>
+              ADMIN LOGIN
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

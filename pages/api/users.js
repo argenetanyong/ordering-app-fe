@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode";
 import { mainAxios } from "../../configs/axios";
 
 const moduleName = "users";
@@ -45,6 +46,16 @@ const loginWithJwt = (jwt) => {
   localStorage.setItem("token", jwt);
 };
 
+const getCurrentUser = () => {
+  try {
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
+    return user;
+  } catch (error) {
+    return null;
+  }
+};
+
 const login = async (data) => {
   try {
     const res = await mainAxios({
@@ -58,6 +69,10 @@ const login = async (data) => {
   } catch (err) {
     return err.response.data;
   }
+};
+
+const logout = () => {
+  localStorage.removeItem("token");
 };
 
 const update = async (id, data) => {
@@ -93,4 +108,6 @@ export default {
   remove,
   loginWithJwt,
   login,
+  logout,
+  getCurrentUser,
 };

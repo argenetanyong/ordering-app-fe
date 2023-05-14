@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 // MUI imports
 import { styled } from "@mui/material/styles";
@@ -35,6 +36,7 @@ import CategoriesList from "../components/categories/List";
 //API imports
 import productsApi from "./api/products";
 import categoriesApi from "./api/categories";
+import usersApi from "./api/users";
 
 const navItems = ["Home", "About", "Contact"];
 
@@ -73,15 +75,18 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function Dashboard() {
+  const router = useRouter();
   const [value, setValue] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [pageVisibility, setPageVisibility] = useState(false);
 
   useEffect(() => {
-    async function initialize() {
-      /*  await getProducts();
-      await getCategories(); */
+    const currentUser = usersApi.getCurrentUser();
+    if (!currentUser) {
+      router.replace("/login");
+    } else {
+      setPageVisibility(true);
     }
-    initialize();
   }, []);
 
   const handleChange = (event, newValue) => {
@@ -92,90 +97,101 @@ function Dashboard() {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const handleLogout = () => {
+    usersApi.logout();
+    router.replace("/");
+  };
+
   return (
-    <>
-      <AppBar component="nav">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          >
-            MUI
-          </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
-                {item}
+    pageVisibility && (
+      <>
+        <AppBar component="nav">
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            >
+              ORDERING QUEUING SYSTEM ADMIN
+            </Typography>
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              {/*   {navItems.map((item) => (
+                <Button key={item} sx={{ color: "#fff" }}>
+                  {item}
+                </Button>
+              ))} */}
+              <Button sx={{ color: "#fff" }}>PROFILE</Button>
+              <Button sx={{ color: "#fff" }} onClick={handleLogout}>
+                LOGOUT
               </Button>
-            ))}
-          </Box>
-        </Toolbar>
-      </AppBar>
+            </Box>
+          </Toolbar>
+        </AppBar>
 
-      <Box
-        sx={{
-          flexGrow: 1,
-          bgcolor: "background.paper",
-          display: "flex",
-          height: "100vh",
-          marginTop: "60px",
-        }}
-      >
-        <Tabs
-          orientation="vertical"
-          variant="scrollable"
-          value={value}
-          onChange={handleChange}
-          aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider" }}
+        <Box
+          sx={{
+            flexGrow: 1,
+            bgcolor: "background.paper",
+            display: "flex",
+            height: "100vh",
+            marginTop: "60px",
+          }}
         >
-          <Tab
-            label={
-              <Box>
-                <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-                  Products
-                </Typography>
-                <Box component="img" src={"https://picsum.photos/50"} />
-              </Box>
-            }
-          />
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            aria-label="Vertical tabs example"
+            sx={{ borderRight: 1, borderColor: "divider" }}
+          >
+            <Tab
+              label={
+                <Box>
+                  <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
+                    Products
+                  </Typography>
+                  <Box component="img" src={"https://picsum.photos/50"} />
+                </Box>
+              }
+            />
 
-          <Tab
-            label={
-              <Box>
-                <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-                  Categories
-                </Typography>
-                <Box component="img" src={"https://picsum.photos/50"} />
-              </Box>
-            }
-          />
-        </Tabs>
+            <Tab
+              label={
+                <Box>
+                  <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
+                    Categories
+                  </Typography>
+                  <Box component="img" src={"https://picsum.photos/50"} />
+                </Box>
+              }
+            />
+          </Tabs>
 
-        <TabPanel value={value} index={0}>
-          <Typography sx={{ fontSize: "20px", fontWeight: "600" }}>
-            Products
-          </Typography>
-          <ProductsList />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Typography sx={{ fontSize: "20px", fontWeight: "600" }}>
-            Categories
-          </Typography>
-          <CategoriesList />
-        </TabPanel>
-      </Box>
-    </>
+          <TabPanel value={value} index={0}>
+            <Typography sx={{ fontSize: "20px", fontWeight: "600" }}>
+              Products
+            </Typography>
+            <ProductsList />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Typography sx={{ fontSize: "20px", fontWeight: "600" }}>
+              Categories
+            </Typography>
+            <CategoriesList />
+          </TabPanel>
+        </Box>
+      </>
+    )
   );
 }
 

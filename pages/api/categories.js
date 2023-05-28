@@ -34,6 +34,7 @@ const create = async (data) => {
     const res = await mainAxios({
       method: "post",
       url: `${moduleName}`,
+      headers: { "Content-Type": "multipart/form-data" },
       data,
     });
     return res.data;
@@ -47,6 +48,7 @@ const update = async (id, data) => {
     const res = await mainAxios({
       method: "put",
       url: `${moduleName}/${id}`,
+      headers: { "Content-Type": "multipart/form-data" },
       data,
     });
     return res.data;

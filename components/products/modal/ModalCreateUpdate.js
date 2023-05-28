@@ -15,6 +15,10 @@ import InputLabel from "@mui/material/InputLabel";
 //API imports
 import productsApi from "../../../pages/api/products";
 
+// ** Custom Components Imports
+import ImageUploaderSingle from "../../ImageUploaderSingle";
+import { setUploadedImage } from "../../../helpers";
+
 const ModalCreateUpdate = forwardRef(
   ({ getProducts, getCategories, categories }, ref) => {
     const [open, setOpen] = useState(false);
@@ -22,6 +26,13 @@ const ModalCreateUpdate = forwardRef(
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
     const [id, setId] = useState("");
+    const [imgPreview, setImagePreview] = useState("");
+    const [imgPath, setImgPath] = useState("");
+
+    const handleImageUpload = (file) => {
+      setImagePreview(file);
+      setImgPath(URL.createObjectURL(file));
+    };
 
     useImperativeHandle(ref, () => ({
       handleClickOpen(id) {
@@ -42,18 +53,43 @@ const ModalCreateUpdate = forwardRef(
 
     const findDataById = async (id) => {
       const res = await productsApi.findById(id);
-      console.log("res -- ", res);
       if (res) {
         setName(res.name);
         setPrice(res.price);
         setCategory(res.category_id);
+        setImgPath(setUploadedImage(res.img_url));
       }
     };
 
     const handleClose = (event, reason) => {
       if (reason == "backdropClick") {
-        console.log("BG CLICK");
+        //console.log("BG CLICK");
       }
+      setImagePreview("");
+      setImgPath("");
+      setOpen(false);
+    };
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      const data = {
+        name: name,
+        price: price,
+        category_id: category,
+        img_url: imgPreview,
+      };
+
+      let formData = new FormData();
+      for (const property in data) {
+        formData.append(property, data[property]);
+      }
+
+      if (id) {
+        updateData(id, formData);
+      } else {
+        createData(formData);
+      }
+
       setOpen(false);
     };
 
@@ -67,18 +103,6 @@ const ModalCreateUpdate = forwardRef(
       await productsApi.update(id, data);
       await getCategories();
       await getProducts();
-    };
-
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-      const data = { name: name, price: price, category_id: category };
-      if (id) {
-        updateData(id, data);
-      } else {
-        createData(data);
-      }
-
-      setOpen(false);
     };
 
     const handleNameChange = (event) => {
@@ -99,7 +123,6 @@ const ModalCreateUpdate = forwardRef(
 
     const handleCategoryChange = (event) => {
       const inputValue = event.target.value;
-      console.log("handleCategoryChange inputValue", inputValue);
       setCategory(inputValue);
     };
 
@@ -113,6 +136,11 @@ const ModalCreateUpdate = forwardRef(
           <DialogTitle>{id ? "EDIT PRODUCT" : "ADD PRODUCT"}</DialogTitle>
           <DialogContent>
             <form onSubmit={handleSubmit}>
+              <ImageUploaderSingle
+                fileUrl={imgPath}
+                file={imgPreview}
+                setFile={handleImageUpload}
+              />
               <TextField
                 sx={{ mt: "10px", mb: "10px" }}
                 type="text"

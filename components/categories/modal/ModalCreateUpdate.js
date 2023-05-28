@@ -11,10 +11,21 @@ import Box from "@mui/material/Box";
 //API imports
 import categoriesApi from "../../../pages/api/categories";
 
+// ** Custom Components Imports
+import ImageUploaderSingle from "../../ImageUploaderSingle";
+import { setUploadedImage } from "../../../helpers";
+
 const ModalForm = forwardRef(({ getCategories }, ref) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [id, setId] = useState("");
+  const [imgPreview, setImagePreview] = useState("");
+  const [imgPath, setImgPath] = useState("");
+
+  const handleImageUpload = (file) => {
+    setImagePreview(file);
+    setImgPath(URL.createObjectURL(file));
+  };
 
   useImperativeHandle(ref, () => ({
     handleClickOpen(id) {
@@ -35,12 +46,36 @@ const ModalForm = forwardRef(({ getCategories }, ref) => {
     const res = await categoriesApi.findById(id);
     if (res) {
       setName(res.name);
+      setImgPath(setUploadedImage(res.img_url));
     }
   };
 
   const handleClose = (event, reason) => {
     if (reason == "backdropClick") {
       console.log("BG CLICK");
+    }
+    setImagePreview("");
+    setImgPath("");
+    setOpen(false);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const data = {
+      name: name,
+      img_url: imgPreview,
+    };
+
+    let formData = new FormData();
+    for (const property in data) {
+      formData.append(property, data[property]);
+    }
+
+    if (id) {
+      updateData(id, formData);
+    } else {
+      createData(formData);
     }
     setOpen(false);
   };
@@ -53,18 +88,6 @@ const ModalForm = forwardRef(({ getCategories }, ref) => {
   const updateData = async (id, data) => {
     await categoriesApi.update(id, data);
     getCategories();
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = { name: name };
-    if (id) {
-      updateData(id, data);
-    } else {
-      createData(data);
-    }
-
-    setOpen(false);
   };
 
   const handleChange = (event) => {
@@ -86,6 +109,12 @@ const ModalForm = forwardRef(({ getCategories }, ref) => {
         <DialogTitle>{id ? "EDIT CATEGORY" : "ADD CATEGORY"}</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit}>
+            <ImageUploaderSingle
+              fileUrl={imgPath}
+              file={imgPreview}
+              setFile={handleImageUpload}
+            />
+
             <TextField
               sx={{ mt: "10px", mb: "10px" }}
               type="text"

@@ -87,6 +87,16 @@ const Login = () => {
             required
           />
           {status && <Alert severity="error">{status}</Alert>}
+          <Box>
+            <Typography
+              sx={{ cursor: "pointer" }}
+              onClick={() => {
+                router.push("/register");
+              }}
+            >
+              Register
+            </Typography>
+          </Box>
           <Box
             sx={{
               display: "flex",

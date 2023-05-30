@@ -37,6 +37,7 @@ const Register = () => {
         return;
       }
       usersApi.loginWithJwt(response.result.token);
+      router.replace("/admin");
     } catch (error) {
       console.log("error --- ", response);
     }

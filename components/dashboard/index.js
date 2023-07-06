@@ -236,8 +236,8 @@ function Dashboard() {
             MUI
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
+            {navItems.map((item, index) => (
+              <Button key={index} sx={{ color: "#fff" }}>
                 {item}
               </Button>
             ))}

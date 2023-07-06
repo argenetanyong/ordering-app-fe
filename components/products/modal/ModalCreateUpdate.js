@@ -28,6 +28,7 @@ const ModalCreateUpdate = forwardRef(
     const [id, setId] = useState("");
     const [imgPreview, setImagePreview] = useState("");
     const [imgPath, setImgPath] = useState("");
+    //const [imageError, setImageError] = useState("");
 
     const handleImageUpload = (file) => {
       setImagePreview(file);
@@ -44,6 +45,9 @@ const ModalCreateUpdate = forwardRef(
       setName("");
       setPrice("");
       setCategory("");
+      setImagePreview("");
+      setImgPath("");
+      //setImageError("");
       setOpen(true);
       setId(id);
       if (id) {
@@ -89,20 +93,31 @@ const ModalCreateUpdate = forwardRef(
       } else {
         createData(formData);
       }
-
-      setOpen(false);
     };
 
     const createData = async (data) => {
-      await productsApi.create(data);
-      await getCategories();
-      await getProducts();
+      /* if (data.get("img_url") == "") {
+        setImageError("Image is required");
+      } */
+      try {
+        const response = await productsApi.create(data);
+
+        /* if (response.status != "success") {
+          return;
+        } */
+        await getCategories();
+        await getProducts();
+        setOpen(false);
+      } catch (error) {
+        console.log("error", error);
+      }
     };
 
     const updateData = async (id, data) => {
       await productsApi.update(id, data);
       await getCategories();
       await getProducts();
+      setOpen(false);
     };
 
     const handleNameChange = (event) => {
@@ -141,6 +156,7 @@ const ModalCreateUpdate = forwardRef(
                 file={imgPreview}
                 setFile={handleImageUpload}
               />
+              {/* <p style={{ color: "red" }}>{imageError}</p> */}
               <TextField
                 sx={{ mt: "10px", mb: "10px" }}
                 type="text"

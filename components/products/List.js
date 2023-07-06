@@ -155,9 +155,9 @@ export default function ProductsList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedProducts.map((product) => (
+                {paginatedProducts.map((product, index) => (
                   <TableRow
-                    key={product.name}
+                    key={index}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="products">

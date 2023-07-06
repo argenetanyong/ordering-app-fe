@@ -106,9 +106,9 @@ export default function BasicTable() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {products.map((product) => (
+                {products.map((product, index) => (
                   <TableRow
-                    key={product.name}
+                    key={index}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="products">

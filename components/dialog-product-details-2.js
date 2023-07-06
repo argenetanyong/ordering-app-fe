@@ -1,4 +1,5 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
+import Image from "next/image";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -8,6 +9,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
+import ImageWithFallback from "./ImageWithFallback";
+import config from "../configs";
+
+import noImage from "../public/images/no-image.png";
 
 const DialogProductDetails = ({
   selectedProduct,
@@ -38,6 +43,10 @@ const DialogProductDetails = ({
       : removeOrder(selectedProduct);
   };
 
+  const imageLoader = ({ src, width }) => {
+    return `${src}?w=${width}`;
+  };
+
   return (
     <div>
       <Dialog
@@ -50,6 +59,16 @@ const DialogProductDetails = ({
         <DialogTitle id="alert-dialog-title">
           {selectedProduct.name}
         </DialogTitle>
+
+        <ImageWithFallback
+          loader={imageLoader}
+          src={`${config.apiBaseUrl}/${selectedProduct.img_url}`}
+          fallbackSrc={`${config.apiBaseUrl}/images/no-image.png`}
+          alt={selectedProduct.name}
+          width={100}
+          height={100}
+        />
+
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             PRICE: {selectedProduct.price}

@@ -88,9 +88,9 @@ export default function CategoriesPage() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {categories.map((category) => (
+                  {categories.map((category, index) => (
                     <TableRow
-                      key={category.id}
+                      key={index}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="categorys">

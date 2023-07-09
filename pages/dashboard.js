@@ -38,6 +38,8 @@ import ImageWithFallback from "../components/ImageWithFallback.js";
 //API imports
 import productsApi from "./api/products";
 import categoriesApi from "./api/categories";
+import ordersApi from "./api/orders";
+import orderDetailsApi from "./api/orderDetails";
 
 import noImage from "../public/images/no-image.png";
 
@@ -90,13 +92,18 @@ function Dashboard() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const [orders, setOrders] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   const dialogProductDetailsRef = useRef();
 
   useEffect(() => {
     async function initialize() {
-      await getProducts();
-      await getCategories();
+      const productResponse = await getProducts();
+      const categoriesResponse = await getCategories();
+
+      if (productResponse && categoriesResponse) {
+        filterProducts(0, categoriesResponse, productResponse);
+      }
     }
     initialize();
   }, []);
@@ -105,6 +112,7 @@ function Dashboard() {
     try {
       const result = await productsApi.list();
       setProducts(result);
+      return result;
     } catch (error) {
       console.log("Error while fetching products data ", error);
     }
@@ -115,6 +123,7 @@ function Dashboard() {
       const result = await categoriesApi.list();
       //console.log("CATEGORIES API LIST RESULT-> ", result);
       setCategories(result);
+      return result;
     } catch (error) {
       console.log("Error while fetching categories data ", error);
     }
@@ -122,10 +131,10 @@ function Dashboard() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    filterProducts(newValue);
+    filterProducts(newValue, categories, products);
   };
 
-  const filterProducts = (categoryIndex) => {
+  const filterProducts = (categoryIndex, categories, products) => {
     const filteredProducts = products.filter(
       (p) => categories[categoryIndex].id === p.category_id
     );
@@ -225,10 +234,11 @@ function Dashboard() {
   };
 
   const showTotalPrice = () => {
-    const totalPrice = orders.reduce((accumulator, current) => {
+    const amount = orders.reduce((accumulator, current) => {
       return accumulator + current.product.price * current.quantity;
     }, 0);
-    return totalPrice;
+    setTotalAmount(amount);
+    return amount;
   };
 
   const handleDrawerToggle = () => {
@@ -237,6 +247,38 @@ function Dashboard() {
 
   const handleAdminAccess = () => {
     router.replace("/login");
+  };
+
+  const submitOrders = async () => {
+    try {
+      const ordersData = {
+        totalAmount: totalAmount,
+      };
+
+      const orderResult = await ordersApi.create(ordersData);
+
+      // Mapping and extracting specific properties
+      const orderDetailsdata = orders.map(
+        ({ product: { id, name, price }, quantity }) => ({
+          product_id: id,
+          order_id: orderResult.result.data.id,
+          product_name: name,
+          product_price: price,
+          order_date: orderResult.result.data.order_date,
+          quantity,
+        })
+      );
+
+      const orderDetailsApiResponse = await orderDetailsApi.create(
+        orderDetailsdata
+      );
+
+      console.log("orderDetailsApiResponse -->", orderDetailsApiResponse);
+
+      setOrders([]);
+    } catch (error) {
+      console.log("Error while submitting data ", error);
+    }
   };
 
   return (
@@ -332,6 +374,7 @@ function Dashboard() {
             orders={orders}
             showTotalPrice={showTotalPrice}
             showProductDetails={showProductDetails}
+            submitOrders={submitOrders}
           />
         </Box>
       )}

@@ -52,7 +52,6 @@ const ModalForm = forwardRef(({ getCategories }, ref) => {
 
   const handleClose = (event, reason) => {
     if (reason == "backdropClick") {
-      console.log("BG CLICK");
     }
     setImagePreview("");
     setImgPath("");

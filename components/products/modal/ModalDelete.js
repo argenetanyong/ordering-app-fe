@@ -52,7 +52,6 @@ const ModalDelete = forwardRef(
 
     const handleClose = (event, reason) => {
       if (reason == "backdropClick") {
-        console.log("BG CLICK");
       }
       setOpen(false);
     };

@@ -32,11 +32,13 @@ import DialogProductDetails2 from "../components/dialog-product-details-2";
 import OrdersPanel from "../components/orders-panel";
 import ProductsList from "../components/products/List";
 import CategoriesList from "../components/categories/List";
+import OrdersList from "../components/orders/List";
 
 //API imports
 import productsApi from "./api/products";
 import categoriesApi from "./api/categories";
 import usersApi from "./api/users";
+import orderApi from "./api/orders";
 
 const navItems = ["Home", "About", "Contact"];
 
@@ -100,6 +102,9 @@ function Dashboard() {
   const handleMenuAccess = () => {
     router.replace("/menu");
   };
+  const handleAdminAccess = () => {
+    router.replace("/login");
+  };
 
   const handleLogout = () => {
     usersApi.logout();
@@ -133,12 +138,11 @@ function Dashboard() {
                   {item}
                 </Button>
               ))} */}
-              <Button sx={{ color: "#fff" }} onClick={handleMenuAccessa}>
+              <Button sx={{ color: "#fff" }} onClick={handleMenuAccess}>
                 MENU
               </Button>
-              <Button sx={{ color: "#fff" }}>PROFILE</Button>
-              <Button sx={{ color: "#fff" }} onClick={handleLogout}>
-                LOGOUT
+              <Button sx={{ color: "#fff" }} onClick={handleAdminAccess}>
+                ADMIN
               </Button>
             </Box>
           </Toolbar>
@@ -165,18 +169,7 @@ function Dashboard() {
               label={
                 <Box>
                   <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-                    Products
-                  </Typography>
-                  <Box component="img" src={"https://picsum.photos/50"} />
-                </Box>
-              }
-            />
-
-            <Tab
-              label={
-                <Box>
-                  <Typography sx={{ fontSize: "12px", fontWeight: "600" }}>
-                    Categories
+                    Orders
                   </Typography>
                   <Box component="img" src={"https://picsum.photos/50"} />
                 </Box>
@@ -186,15 +179,9 @@ function Dashboard() {
 
           <TabPanel value={value} index={0}>
             <Typography sx={{ fontSize: "20px", fontWeight: "600" }}>
-              Products
+              Orders
             </Typography>
-            <ProductsList />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <Typography sx={{ fontSize: "20px", fontWeight: "600" }}>
-              Categories
-            </Typography>
-            <CategoriesList />
+            <OrdersList />
           </TabPanel>
         </Box>
       </>

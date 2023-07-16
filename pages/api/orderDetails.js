@@ -15,6 +15,19 @@ const findById = async (id) => {
   }
 };
 
+const findByOrderId = async (id) => {
+  try {
+    const res = await mainAxios({
+      method: "get",
+      url: `${moduleName}/find-by-order-id/${id}`,
+    });
+    return res.data;
+  } catch (err) {
+    console.log("err", err);
+    return err.response;
+  }
+};
+
 const list = async (params) => {
   try {
     const res = await mainAxios({
@@ -73,5 +86,6 @@ export default {
   create,
   remove,
   findById,
+  findByOrderId,
   update,
 };

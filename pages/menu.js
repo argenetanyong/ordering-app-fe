@@ -249,35 +249,41 @@ function Dashboard() {
     router.replace("/login");
   };
 
+  const handleOrderAccess = () => {
+    router.replace("/orders");
+  };
+
   const submitOrders = async () => {
-    try {
-      const ordersData = {
-        totalAmount: totalAmount,
-      };
+    if (totalAmount) {
+      try {
+        const ordersData = {
+          totalAmount: totalAmount,
+        };
 
-      const orderResult = await ordersApi.create(ordersData);
+        const orderResult = await ordersApi.create(ordersData);
 
-      // Mapping and extracting specific properties
-      const orderDetailsdata = orders.map(
-        ({ product: { id, name, price }, quantity }) => ({
-          product_id: id,
-          order_id: orderResult.result.data.id,
-          product_name: name,
-          product_price: price,
-          order_date: orderResult.result.data.order_date,
-          quantity,
-        })
-      );
+        // Mapping and extracting specific properties
+        const orderDetailsdata = orders.map(
+          ({ product: { id, name, price }, quantity }) => ({
+            product_id: id,
+            order_id: orderResult.result.data.id,
+            product_name: name,
+            product_price: price,
+            order_date: orderResult.result.data.order_date,
+            quantity,
+          })
+        );
 
-      const orderDetailsApiResponse = await orderDetailsApi.create(
-        orderDetailsdata
-      );
+        const orderDetailsApiResponse = await orderDetailsApi.create(
+          orderDetailsdata
+        );
 
-      console.log("orderDetailsApiResponse -->", orderDetailsApiResponse);
+        console.log("orderDetailsApiResponse -->", orderDetailsApiResponse);
 
-      setOrders([]);
-    } catch (error) {
-      console.log("Error while submitting data ", error);
+        setOrders([]);
+      } catch (error) {
+        console.log("Error while submitting data ", error);
+      }
     }
   };
 
@@ -302,13 +308,11 @@ function Dashboard() {
             ORDERING QUEUING SYSTEM
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {/*  {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
-                {item}
-              </Button>
-            ))} */}
+            <Button sx={{ color: "#fff" }} onClick={handleOrderAccess}>
+              ORDERS
+            </Button>
             <Button sx={{ color: "#fff" }} onClick={handleAdminAccess}>
-              ADMIN LOGIN
+              ADMIN
             </Button>
           </Box>
         </Toolbar>

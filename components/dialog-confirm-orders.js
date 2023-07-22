@@ -38,18 +38,39 @@ const DialogConfirmOrders = ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <Box style={{ minWidth: 500 }} />
-        <DialogTitle id="alert-dialog-title">PLACE ORDER?</DialogTitle>
+        <Box sx={{ minWidth: 500 }} />
+        <DialogTitle
+          sx={{ minWidth: 500, textAlign: "center" }}
+          id="alert-dialog-title"
+        >
+          PLACE ORDER?
+        </DialogTitle>
 
         <DialogContent>
           <DialogContentText id="alert-dialog-description"></DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
-          <Box>
-            <Box sx={{ display: "flex" }}>
-              <Button onClick={handleClose}>CANCEL</Button>
-              <Button onClick={submit}>CONFIRM</Button>
-            </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              maxWidth: "300px",
+              marginBottom: "20px",
+            }}
+          >
+            <Button
+              sx={{ color: "white", backgroundColor: "red" }}
+              onClick={handleClose}
+            >
+              CANCEL
+            </Button>
+            <Button
+              sx={{ color: "white", backgroundColor: "#00C132" }}
+              onClick={submit}
+            >
+              CONFIRM
+            </Button>
           </Box>
         </DialogActions>
       </Dialog>

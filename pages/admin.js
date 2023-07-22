@@ -109,7 +109,7 @@ function Dashboard() {
   return (
     pageVisibility && (
       <>
-        <AppBar component="nav">
+        <AppBar component="nav" color="secondary">
           <Toolbar>
             <IconButton
               color="inherit"
@@ -128,12 +128,7 @@ function Dashboard() {
               ORDERING QUEUING SYSTEM ADMIN
             </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              {/*   {navItems.map((item) => (
-                <Button key={item} sx={{ color: "#fff" }}>
-                  {item}
-                </Button>
-              ))} */}
-              <Button sx={{ color: "#fff" }} onClick={handleMenuAccessa}>
+              <Button sx={{ color: "#fff" }} onClick={handleMenuAccess}>
                 MENU
               </Button>
               <Button sx={{ color: "#fff" }}>PROFILE</Button>

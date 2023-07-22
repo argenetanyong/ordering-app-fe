@@ -57,7 +57,9 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box
+          sx={{ p: 3, height: "100vh", overflow: "auto", paddingTop: "100px" }}
+        >
           <div>{children}</div>
         </Box>
       )}
@@ -165,30 +167,31 @@ function Dashboard() {
   const ProductCard = (product) => {
     return (
       <Card
-        sx={{ width: 300, height: 250, margin: 2, cursor: "pointer" }}
+        sx={{
+          width: 300,
+          height: 200,
+          margin: 2,
+          cursor: "pointer",
+        }}
         onClick={() => showProductDetails(product)}
       >
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {product.name}
-          </Typography>
-
-          <ImageWithFallback
-            loader={imageLoader}
-            src={`${config.apiBaseUrl}/${product.img_url}`}
-            fallbackSrc={`${config.apiBaseUrl}/images/no-image.png`}
-            alt={product.name}
-            width={100}
-            height={100}
-          />
-
-          <Typography variant="body2" color="text.secondary">
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ImageWithFallback
+              loader={imageLoader}
+              src={`${config.apiBaseUrl}/${product.img_url}`}
+              fallbackSrc={`${config.apiBaseUrl}/images/no-image.png`}
+              alt={product.name}
+              width={100}
+              height={100}
+            />
+          </div>
+          <Typography variant="h5">{product.name}</Typography>
+          <Typography variant="h6">
+            {"$"}
             {product.price}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="small">Learn More</Button>
-        </CardActions>
       </Card>
     );
   };
@@ -289,7 +292,7 @@ function Dashboard() {
 
   return (
     <>
-      <AppBar component="nav">
+      <AppBar component="nav" sx={{ backgroundColor: "#F9D649" }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -301,17 +304,20 @@ function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography
-            variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            sx={{
+              color: "black",
+              fontWeight: "900",
+              flexGrow: 1,
+            }}
           >
             ORDERING QUEUING SYSTEM
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Button sx={{ color: "#fff" }} onClick={handleOrderAccess}>
+            <Button sx={{ color: "black" }} onClick={handleOrderAccess}>
               ORDERS
             </Button>
-            <Button sx={{ color: "#fff" }} onClick={handleAdminAccess}>
+            <Button sx={{ color: "black" }} onClick={handleAdminAccess}>
               ADMIN
             </Button>
           </Box>
@@ -324,8 +330,7 @@ function Dashboard() {
             flexGrow: 1,
             bgcolor: "background.paper",
             display: "flex",
-            height: "auto",
-            marginTop: "60px",
+            height: "100vh",
           }}
         >
           <Tabs
@@ -334,7 +339,13 @@ function Dashboard() {
             value={value}
             onChange={handleChange}
             aria-label="Vertical tabs example"
-            sx={{ borderRight: 1, borderColor: "divider" }}
+            sx={{
+              borderRight: 1,
+              borderColor: "divider",
+              minWidth: "200px",
+              height: "100vh",
+              paddingTop: "50px",
+            }}
           >
             {categories.map((category, index) => (
               <Tab
